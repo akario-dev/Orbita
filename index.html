@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Orbita v6</title>
+    <title>Orbita</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C58F5E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='4'/><path d='M21 12a9 9 0 1 1-6.219-8.56'/></svg>">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Marked.js for Markdown -->
+    <!-- Marked.js -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- DOMPurify for XSS protection -->
+    <!-- DOMPurify -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <script>
@@ -18,6 +20,7 @@
             darkMode: 'class',
             theme: {
                 extend: {
+                    screens: { 'xs': '360px' },
                     colors: {
                         orbita: {
                             bg: 'var(--bg-color)',       
@@ -32,8 +35,11 @@
                     animation: { 
                         'fade-in': 'fadeIn 0.4s ease-out', 
                         'slide-up': 'slideUp 0.3s ease-out',
-                        'orbit-spin': 'spin 10s linear infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                        'orbit-spin': 'spin 10s linear infinite', 
+                        'spin-slow': 'spin 20s linear infinite',
+                        'orbit-reverse': 'spin 15s linear infinite reverse',
+                        'pulse-slow': 'pulse 3s infinite'
+                        
                     },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
@@ -44,7 +50,7 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         
         :root {
@@ -52,18 +58,14 @@
             --bg-blur: 0px; 
             
             /* Light Mode */
-            --bg-color: #F2F0EB; 
+            --bg-color: #FDFCF8; 
             --surface-color: rgba(255, 255, 255, 0.95);
             --input-bg: #F7F7F5;
             --text-color: #2D2A26;
             --secondary-color: #8C8880;
             --border-color: #E0DDD5;
-            
-            /* Content Specific - Always Dark Code */
             --code-bg: #1e1e1e;
             --code-text: #d4d4d4;
-            --table-border: #E0DDD5;
-            --table-header: #F7F7F5;
         }
 
         .dark {
@@ -74,12 +76,8 @@
             --text-color: #EDEDED;
             --secondary-color: #8B8B95;
             --border-color: #333338;
-            
-            /* Content Specific */
             --code-bg: #111113;
             --code-text: #e0ddd5;
-            --table-border: #333338;
-            --table-header: #2C2C32;
         }
 
         body { 
@@ -91,12 +89,10 @@
             overflow-x: hidden;
         }
         
-        /* Helpers */
         .text-accent { color: var(--accent) !important; }
         .bg-accent { background-color: var(--accent) !important; }
         .border-accent { border-color: var(--accent) !important; }
 
-        /* Cozy Card */
         .cozy-card {
             background: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -105,7 +101,6 @@
         }
         .dark .cozy-card { box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--secondary-color); border-radius: 4px; opacity: 0.5; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -117,7 +112,6 @@
             filter: blur(var(--bg-blur));
         }
 
-        /* Search Bottom Utility */
         .search-bottom {
             position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
             width: 94%; max-width: 600px; z-index: 50;
@@ -126,72 +120,41 @@
         .typing-loader span { animation: typing 1s infinite alternate; }
         @keyframes typing { 0% { opacity: 0.3; transform: translateY(0); } 100% { opacity: 1; transform: translateY(-3px); } }
         
-        /* Chat Bubbles */
-        .chat-bubble-user { background-color: var(--accent); color: white; border-radius: 20px 20px 4px 20px; margin-left: auto; max-width: 85%; position: relative; }
-        .chat-bubble-ai { background-color: var(--surface-color); color: var(--text-color); border-radius: 20px 20px 20px 4px; margin-right: auto; max-width: 90%; border: 1px solid var(--border-color); position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .chat-bubble-user { background-color: var(--accent); color: white; border-radius: 20px 20px 4px 20px; margin-left: auto; max-width: 85%; }
+        .chat-bubble-ai { background-color: var(--surface-color); color: var(--text-color); border-radius: 20px 20px 20px 4px; margin-right: auto; max-width: 90%; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         
-        /* Markdown Styles */
-        .chat-content pre {
-            background: var(--code-bg) !important;
-            color: var(--code-text) !important;
-            padding: 0; 
-            border-radius: 12px;
-            overflow-x: auto;
-            margin: 12px 0;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-        .code-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px; background: rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.75rem; color: rgba(255,255,255,0.6);
-        }
+        .chat-content pre { background: var(--code-bg) !important; color: var(--code-text) !important; padding: 0; border-radius: 12px; overflow-x: auto; margin: 12px 0; border: 1px solid var(--border-color); }
+        .code-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem; color: rgba(255,255,255,0.6); }
         .chat-content code { font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 0.85em; }
-        /* Inline code also dark in light mode for contrast */
-        .chat-content p code, .chat-content li code { 
-            background: rgba(0,0,0,0.05); 
-            padding: 2px 6px; border-radius: 6px; color: #C58F5E; font-weight: 600;
-        }
-        .dark .chat-content p code, .dark .chat-content li code {
-             background: rgba(255,255,255,0.1); color: #C58F5E;
-        }
-
+        .chat-content p code, .chat-content li code { background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 6px; color: #C58F5E; font-weight: 600; }
+        .dark .chat-content p code, .dark .chat-content li code { background: rgba(255,255,255,0.1); color: #C58F5E; }
         .chat-content pre code { display: block; padding: 12px; background: transparent; color: inherit; border: none; }
-
-        /* Tables */
+        
         .table-wrapper { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 12px; margin: 12px 0; background: var(--surface-color); }
         .chat-content table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
         .chat-content th, .chat-content td { padding: 10px 14px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); text-align: left; }
         .chat-content th { background-color: var(--input-bg); font-weight: 600; }
-        .chat-content tr:last-child td { border-bottom: none; }
-        .chat-content tr td:last-child, .chat-content tr th:last-child { border-right: none; }
-
-        /* Images in chat */
         .chat-image { max-width: 80%; margin-bottom: 4px; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .dark .chat-image { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
 
-        /* Toggle Switch */
         .switch-checkbox { display: none; }
-        .switch-label {
-            position: relative; display: block; width: 44px; height: 24px;
-            background-color: var(--input-bg); border-radius: 9999px; cursor: pointer;
-            border: 1px solid var(--border-color); transition: background-color 0.3s ease;
-        }
-        .switch-label::after {
-            content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
-            background-color: white; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-        }
+        .switch-label { position: relative; display: block; width: 44px; height: 24px; background-color: var(--input-bg); border-radius: 9999px; cursor: pointer; border: 1px solid var(--border-color); transition: background-color 0.3s ease; }
+        .switch-label::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background-color: white; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
         .switch-checkbox:checked + .switch-label { background-color: var(--accent); border-color: var(--accent); }
         .switch-checkbox:checked + .switch-label::after { transform: translateX(20px); }
 
-        /* File Badge */
         .file-badge { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.85rem; color: var(--text-color); max-width: 200px; }
-
-        /* Color Input */
         .color-input-wrapper { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; position: relative; border: 1px solid var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .color-input-wrapper input[type="color"] { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; padding: 0; margin: 0; cursor: pointer; border: none; outline: none; opacity: 1; }
+        
+        .float-hint-bubble {
+            position: absolute; background: var(--accent); color: white; padding: 4px 8px; 
+            border-radius: 8px; font-size: 10px; font-weight: bold; pointer-events: none;
+            z-index: 50; animation: bounceHint 2s infinite; white-space: nowrap;
+        }
+        .float-hint-bubble::after {
+            content: ''; position: absolute; bottom: -4px; right: 8px; border-width: 4px 4px 0; border-style: solid; border-color: var(--accent) transparent transparent transparent;
+        }
+        @keyframes bounceHint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-accent selection:text-white">
@@ -200,47 +163,42 @@
 
     <!-- FULL CHAT OVERLAY -->
     <div id="fullChatOverlay" class="fixed inset-0 z-[90] bg-orbita-bg flex flex-col hidden animate-fade-in">
-        <!-- Chat Header -->
         <div class="h-16 px-6 flex items-center justify-between bg-orbita-surface/80 backdrop-blur-md shrink-0 border-b border-transparent shadow-sm z-10">
             <div class="flex items-center gap-4">
                 <button onclick="toggleFullChat()" class="w-10 h-10 rounded-full hover:bg-orbita-input flex items-center justify-center text-orbita-text transition-colors"><i class="fa-solid fa-chevron-left"></i></button>
                 <div>
-                    <h2 class="font-bold text-xl text-orbita-text leading-none tracking-tight">AI Чат</h2>
-                    <p class="text-[10px] text-orbita-secondary font-medium tracking-wider mt-1">GEMINI 2.5</p>
+                    <h2 class="font-bold text-xl text-orbita-text leading-none tracking-tight">Orbita AI</h2>
+                    <p class="text-[10px] text-orbita-secondary font-medium tracking-wider mt-1">based on Gemini 2.5</p>
                 </div>
             </div>
             <button onclick="clearChatHistory()" class="w-10 h-10 rounded-full hover:bg-orbita-input text-orbita-secondary hover:text-red-500 transition-colors" title="Очистить"><i class="fa-regular fa-trash-can"></i></button>
         </div>
         
-        <!-- Chat Container -->
         <div id="chatHistoryContainer" class="flex-grow overflow-y-auto p-4 md:p-6 bg-orbita-bg scroll-smooth pb-48 relative">
-            
-            <!-- Empty State Placeholder -->
             <div id="chatEmptyState" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-0">
-                <div class="relative w-48 h-48 mb-6 flex items-center justify-center opacity-80">
-                    <!-- Outer Orbit (Increased contrast) -->
-                    <div class="absolute w-full h-full border border-orbita-text/30 rounded-full animate-orbit-spin"></div>
-                    <div class="absolute w-full h-full border border-dashed border-orbita-text/40 rounded-full animate-orbit-spin" style="animation-duration: 20s; animation-direction: reverse;"></div>
+                <div class="relative w-64 h-64 mb-8 flex items-center justify-center opacity-90">
+                    <!-- STATIC CENTER -->
+                    <div class="absolute w-20 h-20 bg-gradient-to-br from-accent to-accent/80 rounded-full shadow-[0_0_40px_rgba(var(--accent),0.3)] z-10"></div>
                     
-                    <!-- Inner Circle -->
-                    <div class="absolute w-24 h-24 border-2 border-accent rounded-full animate-pulse-slow flex items-center justify-center bg-orbita-bg/10 backdrop-blur-sm">
-                         <div class="w-2 h-2 bg-accent rounded-full"></div>
+                    <!-- ORBITS -->
+                    <div class="absolute w-full h-full border border-orbita-text/10 rounded-full"></div>
+                    <div class="absolute w-[80%] h-[80%] border border-orbita-text/10 rounded-full"></div>
+                    
+                    <!-- ORBITING PLANET -->
+                    <div class="absolute w-full h-full animate-orbit-spin">
+                        <div class="w-4 h-4 bg-orbita-text rounded-full absolute -top-2 left-1/2 transform -translate-x-1/2 shadow-lg"></div>
                     </div>
-                    
-                    <!-- Satellites -->
-                    <div class="absolute w-full h-full animate-orbit-spin" style="animation-duration: 6s;">
-                        <div class="w-3 h-3 bg-orbita-text rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1.5 shadow-sm"></div>
+                     <!-- ORBITING SATELLITE -->
+                     <div class="absolute w-[60%] h-[60%] animate-orbit-reverse">
+                        <div class="w-2 h-2 bg-orbita-secondary rounded-full absolute -top-1 left-1/2 transform -translate-x-1/2"></div>
                     </div>
                 </div>
-                <!-- FUNNY TEXT HERE -->
-                <h3 class="text-xl font-bold tracking-[0.2em] font-mono text-orbita-text text-center opacity-80">ПОИСК СМЫСЛА<br>ЖИЗНИ...</h3>
-                <p class="text-[10px] mt-3 tracking-widest uppercase text-accent animate-pulse font-bold">...И КОТИКОВ 🐈</p>
+                <div class="h-16 flex flex-col items-center justify-center overflow-hidden">
+                    <h3 id="funnyTextMain" class="text-lg font-bold tracking-widest font-mono text-orbita-text text-center opacity-80 transition-all duration-500">ЗАГРУЗКА...</h3>
+                    <p id="funnyTextSub" class="text-[10px] mt-2 tracking-[0.2em] uppercase text-accent font-bold opacity-60">ПОДОЖДИТЕ</p>
+                </div>
             </div>
-
-            <!-- Messages Layer -->
             <div id="chatMessages" class="relative z-10 space-y-6"></div>
-
-            <!-- Loader -->
             <div id="fullChatLoader" class="relative z-10 flex items-center gap-2 text-orbita-secondary text-sm font-medium typing-loader hidden my-4 pl-2">
                  <div class="w-2 h-2 bg-accent rounded-full animate-bounce"></div>
                  <div class="w-2 h-2 bg-accent rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
@@ -248,7 +206,6 @@
             </div>
         </div>
 
-        <!-- Chat Input (Fixed at bottom) -->
         <div class="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-gradient-to-t from-orbita-bg via-orbita-bg/95 to-transparent z-[100]">
             <div class="max-w-4xl mx-auto">
                 <div id="fullChatFilePreviewArea" class="hidden mb-3 pl-1">
@@ -261,18 +218,11 @@
                         <button onclick="clearFullChatFile()" class="absolute -top-2 -right-2 w-6 h-6 bg-orbita-surface text-orbita-text border border-orbita-border rounded-full flex items-center justify-center text-xs shadow-sm hover:scale-110 transition-transform"><i class="fa-solid fa-times"></i></button>
                     </div>
                 </div>
-
                 <div class="flex items-end gap-2 relative bg-orbita-surface p-2 rounded-[24px] shadow-lg border border-orbita-border">
                     <input type="file" id="fullChatFileInput" class="hidden" accept="*/*" onchange="handleFullChatFileSelect(this)">
-                    <button onclick="document.getElementById('fullChatFileInput').click()" class="w-10 h-10 rounded-full text-orbita-secondary hover:text-accent hover:bg-orbita-input flex items-center justify-center transition-colors flex-shrink-0 mb-0.5" title="Прикрепить файл">
-                         <i class="fa-solid fa-paperclip text-lg"></i>
-                    </button>
-
+                    <button onclick="document.getElementById('fullChatFileInput').click()" class="w-10 h-10 rounded-full text-orbita-secondary hover:text-accent hover:bg-orbita-input flex items-center justify-center transition-colors flex-shrink-0 mb-0.5" title="Прикрепить файл"><i class="fa-solid fa-paperclip text-lg"></i></button>
                     <textarea id="fullChatInput" rows="1" class="flex-grow py-2.5 px-2 bg-transparent border-0 focus:ring-0 focus:outline-none text-base text-orbita-text placeholder-orbita-secondary/60 resize-none max-h-32 leading-relaxed" placeholder="Сообщение..." oninput="this.style.height='';this.style.height=this.scrollHeight+'px'"></textarea>
-                    
-                    <button onclick="handleFullChatSubmit()" class="w-10 h-10 rounded-full bg-accent text-white hover:brightness-110 flex items-center justify-center shadow-md transition-transform active:scale-95 flex-shrink-0 mb-0.5">
-                        <i class="fa-solid fa-arrow-up"></i>
-                    </button>
+                    <button onclick="handleFullChatSubmit()" class="w-10 h-10 rounded-full bg-accent text-white hover:brightness-110 flex items-center justify-center shadow-md transition-transform active:scale-95 flex-shrink-0 mb-0.5"><i class="fa-solid fa-arrow-up"></i></button>
                 </div>
             </div>
         </div>
@@ -305,25 +255,31 @@
 
     <!-- MAIN APP -->
     <div class="flex-grow container mx-auto px-4 py-6 max-w-4xl relative z-10 flex flex-col pb-32">
-        <!-- HEADER (FIXED: justify-between + ml-auto for button group ensures they stay right even if logo is hidden) -->
-        <header class="flex justify-between items-center mb-8 select-none">
-            <div id="logoContainer">
-                <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 bg-accent rounded-full shadow-sm"></div>
-                        <h1 class="text-2xl font-bold text-orbita-text tracking-tight">Orbita</h1>
-                    </div>
-                    <p id="dailyQuote" class="text-xs text-orbita-secondary mt-1 ml-5 font-medium opacity-80 cursor-pointer hover:text-accent transition-colors" onclick="refreshQuote()">...</p>
+        <!-- HEADER -->
+        <header id="mainHeader" class="flex justify-between items-center mb-8 select-none min-h-[44px]">
+            <div id="logoContainer" class="group relative flex items-center gap-2">
+                <div class="w-8 h-8 flex items-center justify-center text-accent">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full animate-spin-slow" style="animation-duration: 20s">
+                        <circle cx="12" cy="12" r="4" fill="currentColor" class="text-accent"/>
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56" class="text-orbita-text opacity-70"/>
+                    </svg>
                 </div>
+                <h1 class="text-2xl font-bold text-orbita-text tracking-tight">Orbita</h1>
+                <p id="dailyQuote" class="absolute top-full left-0 pt-2 text-[10px] text-orbita-secondary font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">...</p>
             </div>
-            <!-- Added ml-auto here -->
+
             <div class="flex items-center gap-3 ml-auto">
-                <button onclick="toggleFocusMode()" id="timerBtn" class="w-11 h-11 rounded-xl cozy-card flex items-center justify-center text-orbita-secondary hover:text-accent transition-all hover:scale-105" title="Таймер"><i class="fa-solid fa-stopwatch text-lg"></i></button>
-                <button onclick="toggleSidePanel()" id="hubBtn" class="w-11 h-11 rounded-xl cozy-card flex items-center justify-center text-orbita-secondary hover:text-accent transition-all hover:scale-105 relative" title="Хаб">
+                <button onclick="toggleFocusMode()" id="timerBtn" class="h-11 px-4 rounded-xl cozy-card flex items-center justify-center gap-2 text-orbita-secondary hover:text-accent transition-all hover:scale-105" title="Таймер">
+                    <i class="fa-solid fa-stopwatch text-lg"></i>
+                    <span id="smartClockText" class="text-sm font-mono font-bold pt-0.5">00:00</span>
+                </button>
+                
+                <button onclick="toggleSidePanel()" id="hubBtn" class="w-11 h-11 rounded-xl cozy-card flex items-center justify-center text-orbita-secondary hover:text-accent transition-all hover:scale-105 relative" title="Блокнот">
                     <i class="fa-solid fa-inbox text-lg"></i>
                     <span id="hubIndicator" class="hidden absolute top-3 right-3 w-2 h-2 bg-accent rounded-full border border-white"></span>
                 </button>
-                <button onclick="openSettings()" class="w-11 h-11 rounded-xl cozy-card flex items-center justify-center text-orbita-secondary hover:text-orbita-text hover:rotate-90 transition-all" title="Настройки"><i class="fa-solid fa-gear text-lg"></i></button>
+
+                <button onclick="openSettings()" id="settingsBtn" class="w-11 h-11 rounded-xl cozy-card flex items-center justify-center text-orbita-secondary hover:text-orbita-text hover:rotate-90 transition-all border border-orbita-border shadow-sm" title="Настройки"><i class="fa-solid fa-gear text-lg"></i></button>
             </div>
         </header>
 
@@ -337,13 +293,8 @@
             </div>
         </div>
 
-        <!-- TIPS CONTAINER (REMOVED BORDER & BACKGROUND) -->
-        <div id="tipsContainer" class="w-full text-center mt-2 mb-6 transition-opacity hidden">
-            <p id="tipText" class="text-[10px] text-orbita-secondary opacity-60 hover:opacity-100 transition-opacity cursor-default"></p>
-        </div>
-
         <!-- AI LAB (Widget) -->
-        <section id="aiWidgetSection" class="mb-8 w-full">
+        <section id="aiWidgetSection" class="mt-8 mb-8 w-full">
             <div class="cozy-card p-0.5 shadow-sm hover:shadow-md transition-shadow rounded-[20px]">
                 <div class="bg-orbita-input rounded-[18px] px-3 py-2"> 
                     <div id="filePreviewArea" class="hidden mb-2 pl-1">
@@ -371,18 +322,26 @@
                     </div>
                 </div>
 
-                <button onclick="toggleFullChat()" class="w-full flex justify-between items-center px-4 py-2 mt-0.5 group" title="Перейти в полный чат">
-                    <span class="text-[11px] text-accent font-bold uppercase tracking-wide hover:underline">Перейти в полный чат</span>
-                    <i class="fa-solid fa-arrow-right text-[10px] text-accent"></i>
-                </button>
+                <div class="flex justify-between items-center px-4 py-2 mt-0.5 ">
+                    <button onclick="toggleFullChat()" class="text-[11px] text-accent font-bold uppercase tracking-wide hover:underline group flex items-center gap-1" title="Перейти в полный чат">
+                        <span>Полный чат</span>
+                        <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
 
-                <div id="aiResultContainer" class="hidden mt-3 pt-3 border-t border-orbita-border/50 px-3 pb-3">
-                    <!-- Added padding here -->
-                    <div id="aiLoader" class="flex items-center gap-2 text-orbita-secondary text-xs font-medium typing-loader hidden mb-2 mt-2 px-1">
+                <div id="aiResultContainer" class="hidden mt-1 pt-3 border-t border-orbita-border/50 px-3 pb-3 relative">
+                     <button onclick="toggleAiOutput()" class="absolute top-3 right-3 w-6 h-6 rounded-full hover:bg-orbita-bg text-orbita-secondary hover:text-orbita-text flex items-center justify-center transition-colors" title="Свернуть ответ">
+                        <i id="aiToggleIcon" class="fa-solid fa-chevron-up text-xs"></i>
+                    </button>
+                    <div id="aiLoader" class="flex items-center gap-2 text-orbita-secondary text-xs font-medium typing-loader hidden mb-2 mt-0 px-1">
                         <i class="fa-solid fa-circle-notch fa-spin text-accent"></i> <span>Думаю...</span>
                     </div>
-                    <div id="aiOutput" class="hidden chat-content max-w-none mt-1 text-sm text-orbita-text leading-relaxed"></div>
-                    <img id="generatedImage" src="" class="hidden w-full rounded-xl mt-3 border border-orbita-border shadow-sm">
+                    <div id="aiRestoreHint" class="hidden text-[10px] text-orbita-secondary/50 mb-1 italic">Восстановлено из памяти</div>
+                    <div id="aiContentWrapper">
+                        <div id="aiOutput" class="hidden chat-content max-w-none mt-1 text-sm text-orbita-text leading-relaxed pr-6"></div>
+                        <img id="generatedImage" src="" class="hidden w-full rounded-xl mt-3 border border-orbita-border shadow-sm">
+                    </div>
+                    <div id="aiCollapsedHint" class="hidden text-xs text-orbita-secondary italic py-1">Ответ скрыт (нажмите стрелку)</div>
                 </div>
             </div>
         </section>
@@ -391,16 +350,23 @@
         <section class="flex-grow relative">
             <div class="flex items-center gap-2 mb-5 overflow-x-auto no-scrollbar pt-2 pb-2">
                 <div id="categoryFilters" class="flex gap-2"></div>
-                <button onclick="promptNewCategory()" class="h-9 px-3 rounded-xl border border-orbita-border bg-orbita-surface text-orbita-secondary hover:text-accent hover:border-accent transition-all text-xs font-bold flex items-center gap-1 whitespace-nowrap"><i class="fa-solid fa-plus"></i></button>
+                <button onclick="promptNewCategory()" class="h-9 px-3 rounded-xl border border-orbita-border bg-orbita-surface text-orbita-secondary hover:text-accent hover:border-accent transition-all text-xs font-bold flex items-center gap-1 whitespace-nowrap active:scale-95"><i class="fa-solid fa-plus"></i></button>
                 <div class="flex-grow"></div>
-                <button onclick="toggleEditMode()" id="editModeBtn" class="h-9 w-9 flex items-center justify-center rounded-xl text-orbita-secondary hover:text-accent hover:bg-orbita-surface transition-all"><i class="fa-solid fa-pen text-xs"></i></button>
+
+                <button onclick="toggleEditMode()" id="editModeBtn" class="h-9 w-9 flex items-center justify-center rounded-xl text-orbita-secondary hover:text-accent hover:bg-orbita-surface transition-all active:scale-95"><i class="fa-solid fa-pen text-xs"></i></button>
+
+                <!-- NEW BACKUP SETTINGS BUTTON (Hidden by default, shown when header is hidden) -->
+                <button onclick="openSettings()" id="backupSettingsBtn" class="hidden h-9 w-9 flex items-center justify-center rounded-xl bg-orbita-surface text-orbita-secondary hover:text-orbita-text border border-orbita-border transition-all active:scale-95 shadow-sm"><i class="fa-solid fa-gear text-xs"></i></button>
             </div>
             
-            <div id="resourceGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 pb-10"></div>
+            <div id="resourceGrid" class="grid grid-cols-2 gap-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-5 pb-10"></div>
             
             <div id="emptyState" class="hidden py-12 text-center">
+                 <div class="inline-block p-4 rounded-full bg-orbita-input mb-3 text-orbita-secondary">
+                    <i class="fa-regular fa-folder-open text-2xl"></i>
+                </div>
                 <p class="text-sm text-orbita-secondary mb-3">Здесь пока пусто</p>
-                <button onclick="openModal()" class="text-accent font-bold text-sm hover:underline">Добавить</button>
+                <button onclick="openModal()" class="text-accent font-bold text-sm hover:underline">Добавить ссылку</button>
             </div>
         </section>
     </div>
@@ -408,26 +374,35 @@
     <!-- SIDE PANEL -->
     <div id="sidePanel" class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-orbita-bg border-l border-orbita-border transform translate-x-full transition-transform duration-300 z-[60] shadow-2xl flex flex-col">
         <div class="h-[64px] px-6 flex justify-between items-center bg-orbita-surface border-b border-orbita-border flex-shrink-0">
-            <h3 class="font-bold text-lg text-orbita-text">Хаб</h3>
+            <h3 class="font-bold text-lg text-orbita-text">Блокнот</h3>
             <button onclick="toggleSidePanel()" class="w-9 h-9 rounded-xl hover:bg-orbita-input flex items-center justify-center transition-colors"><i class="fa-solid fa-times text-orbita-secondary"></i></button>
         </div>
         <div class="flex px-6 border-b border-orbita-border bg-orbita-surface flex-shrink-0 relative">
             <button onclick="switchTab('notes')" id="tabNotes" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide border-b-2 border-accent text-accent transition-colors">Заметки</button>
             <button onclick="switchTab('todos')" id="tabTodos" class="flex-1 py-3 text-xs font-bold uppercase tracking-wide border-b-2 border-transparent text-orbita-secondary transition-colors">Задачи</button>
-            
-            <!-- DOWNLOAD NOTES BTN -->
-            <button onclick="downloadNotes()" class="absolute right-4 top-1/2 -translate-y-1/2 text-orbita-secondary hover:text-accent" title="Скачать заметки">
-                <i class="fa-solid fa-download"></i>
-            </button>
+            <button onclick="downloadNotes()" class="absolute right-4 top-1/2 -translate-y-1/2 text-orbita-secondary hover:text-accent" title="Скачать заметки"><i class="fa-solid fa-download"></i></button>
         </div>
         <div id="sidePanelContent" class="bg-orbita-bg flex-grow flex flex-col overflow-hidden">
-            <div id="viewNotes" class="tab-content flex-grow">
+            <!-- NOTES SECTION -->
+            <div id="viewNotes" class="tab-content flex-grow relative flex flex-col">
+                <div class="absolute bottom-4 right-4 z-10 group">
+                    <div id="magicNotesHint" class="float-hint-bubble -top-8 -right-0 hidden">Улучши текст!</div>
+                    <button onclick="handleMagicNotes()" id="magicNotesBtn" class="w-10 h-10 rounded-full bg-orbita-surface border border-orbita-border shadow-lg text-accent hover:scale-110 hover:border-accent transition-all flex items-center justify-center" title="Улучшить текст с AI">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                </div>
                 <textarea id="notesArea" class="w-full h-full p-6 bg-transparent resize-none outline-none text-sm leading-6 text-orbita-text placeholder-orbita-secondary/40 font-mono" placeholder="Ваши мысли..."></textarea>
             </div>
+            
+            <!-- TODOS SECTION -->
             <div id="viewTodos" class="tab-content hidden flex-col p-6 flex-grow overflow-y-auto">
-                <form id="todoForm" class="flex gap-2 mb-4 flex-shrink-0">
-                    <input type="text" id="todoInput" class="flex-grow px-3 py-2.5 rounded-xl border border-orbita-border bg-orbita-surface text-sm focus:outline-none focus:border-accent transition-all" placeholder="Новая задача..." autocomplete="off">
-                    <button type="submit" class="bg-accent text-white w-10 rounded-xl flex items-center justify-center hover:brightness-105 shadow-sm"><i class="fa-solid fa-plus"></i></button>
+                <form id="todoForm" class="flex gap-2 mb-4 flex-shrink-0 relative">
+                    <input type="text" id="todoInput" class="flex-grow px-3 py-2.5 rounded-xl border border-orbita-border bg-orbita-surface text-sm focus:outline-none focus:border-accent transition-all pl-3 pr-10" placeholder="Новая задача..." autocomplete="off">
+                    <div id="magicTodoHint" class="float-hint-bubble -top-6 right-10 hidden">AI Планировщик</div>
+                    <button type="button" onclick="handleMagicTodo()" id="magicTodoBtn" class="absolute right-14 top-1/2 -translate-y-1/2 text-orbita-secondary hover:text-accent transition-colors p-2 z-10" title="Разбить на подзадачи с AI">
+                         <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                    </button>
+                    <button type="submit" class="bg-accent text-white w-10 rounded-xl flex items-center justify-center hover:brightness-105 shadow-sm flex-shrink-0 z-10"><i class="fa-solid fa-plus"></i></button>
                 </form>
                 <div id="todoList" class="space-y-2 pb-4 overflow-y-auto flex-grow"></div>
                 <button onclick="clearCompletedTodos()" class="mt-auto text-xs text-orbita-secondary hover:text-red-500 py-3 w-full text-center border-t border-orbita-border flex-shrink-0">Очистить завершенные</button>
@@ -450,7 +425,7 @@
             </div>
             <form id="addResourceForm" class="p-6 space-y-4">
                 <input type="url" id="resUrl" required placeholder="https://" class="w-full px-4 py-2.5 mt-1 rounded-xl border border-orbita-border bg-orbita-input focus:border-accent outline-none text-sm text-orbita-text" onblur="autoFillTitle()">
-                <input type="text" id="resTitle" required class="w-full px-4 py-2.5 mt-1 rounded-xl border border-orbita-border bg-orbita-input focus:border-accent outline-none text-sm text-orbita-text">
+                <input type="text" id="resTitle" required class="w-full px-4 py-2.5 mt-1 rounded-xl border border-orbita-border bg-orbita-input focus:border-accent outline-none text-sm text-orbita-text" placeholder="Название">
                 <select id="resCategory" class="w-full px-4 py-2.5 mt-1 rounded-xl border border-orbita-border bg-orbita-input focus:border-accent outline-none text-sm text-orbita-text"></select>
                 <button type="submit" class="w-full bg-accent text-white font-bold py-3 rounded-xl shadow-sm hover:brightness-105 mt-2 text-sm">Сохранить</button>
             </form>
@@ -506,10 +481,6 @@
                 <div class="space-y-4">
                     <h4 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider">Система</h4>
                     <div>
-                        <label class="text-xs font-bold text-orbita-secondary ml-1">DNS / Proxy (Экспериментально)</label>
-                        <input type="text" id="dnsInput" class="w-full px-4 py-3 border border-orbita-border rounded-xl bg-orbita-input text-xs focus:border-accent outline-none text-orbita-text font-mono" placeholder="dns.google" onchange="saveSettings()">
-                    </div>
-                    <div>
                         <label class="text-xs font-bold text-orbita-secondary ml-1">Поисковик</label>
                         <select id="searchEngineInput" onchange="saveSettings()" class="w-full px-3 py-2.5 mt-1 border border-orbita-border rounded-xl bg-orbita-input text-xs focus:border-accent outline-none text-orbita-text">
                             <option value="google">Google</option>
@@ -518,27 +489,33 @@
                             <option value="ddg">DuckDuckGo</option>
                         </select>
                     </div>
+                    
+                    <div>
+                        <label class="text-xs font-bold text-orbita-secondary ml-1">Категория при запуске</label>
+                        <select id="defaultCategoryInput" onchange="saveSettings()" class="w-full px-3 py-2.5 mt-1 border border-orbita-border rounded-xl bg-orbita-input text-xs focus:border-accent outline-none text-orbita-text">
+                        </select>
+                    </div>
+
                     <div>
                         <label class="text-xs font-bold text-orbita-secondary ml-1">Gemini API Key</label>
                         <input type="password" id="geminiKeyInput" class="w-full px-4 py-3 border border-orbita-border rounded-xl bg-orbita-input text-xs focus:border-accent outline-none text-orbita-text font-mono" placeholder="Вставьте ваш API ключ..." onchange="saveSettings()">
                         <p class="text-[10px] text-orbita-secondary mt-1">Оставьте пустым для отключения AI.</p>
                     </div>
 
-                    <!-- Visibility Settings (Fixed Logic: ON = Visible) -->
-                    <h4 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider pt-2 mt-4">Видимость элементов</h4>
+                    <h4 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider pt-2 mt-4">Видимость</h4>
                     
                     <div class="flex items-center justify-between bg-orbita-surface p-3 rounded-xl border border-orbita-border">
-                        <span class="text-sm font-medium text-orbita-text">Логотип и цитата</span>
+                        <span class="text-sm font-medium text-orbita-text">Логотип</span>
                         <input type="checkbox" id="showLogoToggle" class="switch-checkbox" onchange="saveSettings()">
                         <label for="showLogoToggle" class="switch-label"></label>
                     </div>
                      <div class="flex items-center justify-between bg-orbita-surface p-3 rounded-xl border border-orbita-border">
-                        <span class="text-sm font-medium text-orbita-text">Кнопка Таймера</span>
+                        <span class="text-sm font-medium text-orbita-text">Часы с таймером</span>
                         <input type="checkbox" id="showTimerToggle" class="switch-checkbox" onchange="saveSettings()">
                         <label for="showTimerToggle" class="switch-label"></label>
                     </div>
-                     <div class="flex items-center justify-between bg-orbita-surface p-3 rounded-xl border border-orbita-border">
-                        <span class="text-sm font-medium text-orbita-text">Кнопка Хаба</span>
+                    <div class="flex items-center justify-between bg-orbita-surface p-3 rounded-xl border border-orbita-border">
+                        <span class="text-sm font-medium text-orbita-text">Блокнот</span>
                         <input type="checkbox" id="showHubToggle" class="switch-checkbox" onchange="saveSettings()">
                         <label for="showHubToggle" class="switch-label"></label>
                     </div>
@@ -547,13 +524,8 @@
                         <input type="checkbox" id="showAiWidgetToggle" class="switch-checkbox" onchange="saveSettings()">
                         <label for="showAiWidgetToggle" class="switch-label"></label>
                     </div>
-                    <div class="flex items-center justify-between bg-orbita-surface p-3 rounded-xl border border-orbita-border">
-                        <span class="text-sm font-medium text-orbita-text">Подсказки</span>
-                        <input type="checkbox" id="showHintsToggle" class="switch-checkbox" onchange="saveSettings()"/>
-                        <label for="showHintsToggle" class="switch-label"></label>
-                   </div>
                 </div>
-                
+
                 <div class="space-y-4 pt-2 border-t border-orbita-border">
                     <h4 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider">Связь</h4>
                     <a href="https://boosty.to/kageno_qq/donate" target="_blank" class="flex items-center justify-between bg-orbita-surface p-3 rounded-xl border border-orbita-border hover:border-accent transition-colors">
@@ -565,73 +537,87 @@
                         <i class="fa-solid fa-arrow-right text-orbita-secondary"></i>
                     </a>
                 </div>
-
-                <div class="flex gap-2 pt-2 border-t border-orbita-border">
-                    <button onclick="exportData()" class="flex-1 py-3 bg-orbita-surface rounded-xl text-xs font-bold border border-orbita-border hover:bg-orbita-input transition-colors text-orbita-text">Бэкап</button>
-                    <label class="flex-1 py-3 bg-orbita-surface rounded-xl text-xs font-bold border border-orbita-border hover:bg-orbita-input transition-colors text-center cursor-pointer text-orbita-text">Восстановить<input type="file" id="importFile" class="hidden" onchange="importData(this)"></label>
+                
+                <div class="flex gap-2 pt-5 border-t border-orbita-border">
+                    <button onclick="exportData()" class="flex-1 py-3 bg-orbita-surface rounded-xl text-xs font-bold border border-orbita-border hover:bg-orbita-input transition-colors text-orbita-text">Сохранить</button>
+                    <label class="flex-1 py-3 bg-orbita-surface rounded-xl text-xs font-bold border border-orbita-border hover:bg-orbita-input transition-colors text-center cursor-pointer text-orbita-text">Загрузить<input type="file" id="importFile" class="hidden" onchange="importData(this)"></label>
                 </div>
 
                 <button onclick="resetSettings()" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl text-xs hover:bg-red-600 transition-colors mt-2">Сброс настроек</button>
                 
-                <!-- ABOUT INFO TRIGGER -->
                 <div class="text-center mt-4">
-                    <p onclick="openAboutModal()" class="text-[10px] text-orbita-secondary opacity-50 hover:opacity-100 hover:text-accent cursor-pointer transition-all p-1">
-                        О проекте Orbita &copy; 2025
+                    <p onclick="openAboutModal()" class="text-[10px] text-orbita-secondary opacity-50 hover:opacity-100 hover:text-accent cursor-pointer transition-all p-1">.9
+                        О системе Orbita v7.0.0 &copy; 2025
                     </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ABOUT MODAL (REWORKED) -->
+    <!-- ABOUT MODAL (DETAILED) -->
     <div id="aboutModal" class="hidden fixed inset-0 z-[80] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-opacity">
-        <div class="bg-orbita-bg w-full max-w-sm rounded-2xl shadow-2xl border border-orbita-border animate-slide-up overflow-hidden">
+        <div class="bg-orbita-bg w-full md:max-w-md rounded-2xl shadow-2xl border border-orbita-border animate-slide-up overflow-hidden max-h-[90vh] flex flex-col">
             <div class="px-6 py-4 border-b border-orbita-border flex justify-between items-center bg-orbita-surface">
-                <h3 class="font-bold text-base text-orbita-text">Сведения о системе</h3><button onclick="document.getElementById('aboutModal').classList.add('hidden')" class="text-orbita-secondary hover:text-orbita-text"><i class="fa-solid fa-times"></i></button>
+                <h3 class="font-bold text-base text-orbita-text">О системе</h3><button onclick="document.getElementById('aboutModal').classList.add('hidden')" class="text-orbita-secondary hover:text-orbita-text"><i class="fa-solid fa-times"></i></button>
             </div>
-            <div class="p-6 space-y-5 text-sm text-orbita-text leading-relaxed overflow-y-auto max-h-[60vh]">
-                <div class="flex items-center gap-4 mb-2">
-                    <div class="w-12 h-12 bg-accent rounded-xl flex items-center justify-center text-white text-xl shadow-lg"><i class="fa-solid fa-rocket"></i></div>
+            <div class="p-6 space-y-6 text-sm text-orbita-text leading-relaxed overflow-y-auto custom-scrollbar">
+                
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-orbita-surface border border-orbita-border rounded-xl flex items-center justify-center text-accent shadow-sm">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                            <path d="M21 12a9 9 0 1 1-6.219-8.56" class="opacity-70"/>
+                        </svg>
+                    </div>
                     <div>
-                        <h4 class="font-bold text-lg leading-tight">Orbita OS</h4>
-                        <p class="text-[11px] font-mono text-orbita-secondary">Version 6.0.0 (Stable)</p>
+                        <h4 class="font-bold text-xl leading-tight">Orbita</h4>
+                        <p class="text-[11px] font-mono text-orbita-secondary">Build 7.0.0 (Stable)</p>
+                        <p class="text-[10px] text-orbita-secondary mt-1">by Akario</p>
                     </div>
                 </div>
 
-                <div class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                    <p class="text-xs text-red-500 font-bold flex items-start gap-2">
-                        <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
-                        <span>Внимание: AI функции (Gemini) недоступны на территории РФ без использования VPN.</span>
+                <!-- WARNING BLOCK FOR RUSSIA -->
+                <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-xl">
+                     <p class="text-xs font-bold flex items-center gap-2 mb-2 text-red-600 dark:text-red-400">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Внимание: Работа ИИ в РФ</span>
+                    </p>
+                    <p class="text-[11px] leading-relaxed opacity-90">
+                        Google Gemini <b>не работает в России</b> без дополнительных средств обхода. Вам необходимо использовать VPN или настроить DNS.
                     </p>
                 </div>
 
-                <div class="space-y-2">
-                    <h5 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider border-b border-orbita-border pb-1">Что нового?</h5>
-                     <p class="text-xs text-orbita-text opacity-90">
-                        • Улучшен интерфейс настроек (адаптивная шапка)<br>
-                        • Новая анимация "Поиск смысла жизни..."<br>
-                        • Автоперевод ошибок API
+                <!-- DNS HELP -->
+                <div class="p-3 bg-orbita-input border border-orbita-border rounded-xl">
+                    <p class="text-xs font-bold flex items-center gap-2 mb-2 text-accent">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Настройка DNS (Бесплатно)</span>
                     </p>
-                </div>
+                    <p class="text-[11px] opacity-80 leading-relaxed mb-3">
+                        Используйте зашифрованный DNS от Comss.one. Это самый простой способ восстановить доступ.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <div class="p-2 bg-orbita-surface rounded-lg border border-orbita-border/50">
+                            <p class="text-[10px] font-bold mb-1"><i class="fa-brands fa-chrome mr-1"></i> Chrome / Edge (ПК)</p>
+                            <ol class="text-[10px] opacity-80 list-decimal pl-4 space-y-1">
+                                <li>Настройки -> Конфиденциальность -> Безопасность.</li>
+                                <li>Включите "Использовать безопасный DNS".</li>
+                                <li>Выберите "Персонализированный" и введите:</li>
+                            </ol>
+                            <div class="mt-1 p-1 bg-orbita-bg rounded text-[9px] font-mono select-all border border-orbita-border cursor-pointer hover:border-accent" onclick="navigator.clipboard.writeText(this.innerText);alert('Скопировано!')">https://dns.comss.one/dns-query</div>
+                        </div>
 
-                <div class="space-y-2">
-                    <h5 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider border-b border-orbita-border pb-1">Хранилище</h5>
-                    <p class="text-xs text-orbita-text opacity-90">
-                        Все ваши данные (ссылки, задачи, заметки) хранятся <span class="font-bold">локально</span> в вашем браузере (LocalStorage). Мы не передаем их на сервера.
-                    </p>
-                    <p class="text-[10px] text-orbita-secondary italic">Рекомендуется регулярно делать бэкап в настройках.</p>
-                </div>
-                
-                 <div class="space-y-2">
-                    <h5 class="text-xs font-bold text-orbita-secondary uppercase tracking-wider border-b border-orbita-border pb-1">Как открыть это окно?</h5>
-                    <p class="text-xs text-orbita-text opacity-90">
-                        Настройки <i class="fa-solid fa-gear text-[10px] mx-1"></i> -> Спуститесь в самый низ -> Нажмите на "О проекте Orbita".
-                    </p>
-                </div>
-
-                <div class="pt-2 text-[10px] text-center text-orbita-secondary">
-                    Designed & Developed by Akario <br>
-                    2025 All Rights Reserved.
+                        <div class="p-2 bg-orbita-surface rounded-lg border border-orbita-border/50">
+                             <p class="text-[10px] font-bold mb-1"><i class="fa-brands fa-android mr-1"></i> Android</p>
+                            <ol class="text-[10px] opacity-80 list-decimal pl-4 space-y-1">
+                                <li>Настройки -> Подключение (Сеть) -> Персональный DNS.</li>
+                                <li>Выберите "Имя хоста провайдера".</li>
+                                <li>Введите адрес ниже:</li>
+                            </ol>
+                            <div class="mt-1 p-1 bg-orbita-bg rounded text-[9px] font-mono select-all border border-orbita-border cursor-pointer hover:border-accent" onclick="navigator.clipboard.writeText(this.innerText);alert('Скопировано!')">dns.comss.one</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -640,13 +626,10 @@
     <!-- LOGIC -->
     <script>
         const KEYS = { RES: 'orbita_v6_res', SET: 'orbita_v6_set', NOTES: 'orbita_v6_notes', TODOS: 'orbita_v6_todos', CATS: 'orbita_v6_cats', CHAT: 'orbita_v6_chat', VISITED: 'orbita_v6_visited' };
-        // SECURITY FIX: Removed Hardcoded API Key.
-        const DEFAULT_API_KEY = ""; 
-
+        
         const state = {
             category: 'all',
             editMode: false,
-            // Separate state for full chat and widget file handling to prevent ghosting
             currentImageBase64: null,
             currentImageMime: null,
             currentFileName: null,
@@ -654,69 +637,84 @@
             resources: [],
             todos: [],
             chatHistory: [],
+            isAiOutputCollapsed: false,
             settings: { 
                 theme: 'light', bgImage: '', blur: 0, accent: '#C58F5E', 
                 searchEngine: 'google', apiKey: '', searchPos: 'top',
-                // Visibility toggles - Default TRUE (Visible)
-                showLogo: true, showTimer: true, showHub: true, showAiWidget: true, showHints: true,
-                dns: '' // New setting
+                showLogo: true, showTimer: true, showHub: true, showAiWidget: true,
+                dns: '', defaultCategory: 'all', hintsShown: false
             },
             timer: { time: 25*60, initial: 25*60, active: false, interval: null }
         };
 
-        const placeholders = ["Спроси что угодно...", "Нарисуй...", "Код на Python...", "Таблица расходов..."];
-        const tips = [
-            "Вы можете сделать бэкап настроек и открыть их на ПК.",
-            "Нажмите на логотип, чтобы сменить цитату дня.",
-            "AI функции требуют VPN в некоторых регионах.",
-            "Двойной клик по таймеру откроет Focus Mode.",
-            "Перетаскивайте ссылки в режиме редактирования."
-        ];
+        const placeholders = ["Спроси что угодно...", "Сделай сохранение в настройках...", "Нажми на лого для цитаты...", "Думай сам что спросить...", "Найдешь пасхалку?..."];
         let phIndex = 0;
-        let tipIndex = 0;
+
+        const funnyTexts = [
+            { main: "Спрашиваю у кота...", sub: "Шрёдингер на связи." },
+            { main: "Генерация смысла...", sub: "Ошибка 404: смысл не найден." },
+            { main: "Считаю до бесконечности...", sub: "уже дважды." },
+            { main: "Подключение к космосу...", sub: "У нас проблема." },
+            { main: "Вчисляю ответ...", sub: "Это 86, но я проверяю." },
+            { main: "Ожидание вдохновения...", sub: "Вдохновение в отпуске. Пишите сами." },
+            { main: "Консультируюсь с котом...", sub: "Он мяукнул «вероятно»." },
+            { main: "Калибровка интуиции....", sub: "Интуиция советует сделать перерыв." },
+        ];
 
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             refreshQuote();
             setupDragAndDrop();
-            updateTimerDisplay(state.timer.time);
+            updateSmartClock(); 
             checkFirstVisit();
+            startFunnyTextRotation();
             
-            // Placeholder rotation
             setInterval(() => {
                 const input = document.getElementById('aiInput');
                 if (document.activeElement !== input && !input.value) {
                     phIndex = (phIndex + 1) % placeholders.length;
                     input.placeholder = placeholders[phIndex];
                 }
-            }, 3000);
-
-            // Tips rotation
-            rotateTips();
-            setInterval(rotateTips, 10000);
+            }, 4000);
         });
+        
+        function updateSmartClock() {
+            setInterval(() => {
+                const btn = document.getElementById('smartClockText');
+                if (!state.timer.active) {
+                    const now = new Date();
+                    btn.innerText = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    btn.classList.remove('text-accent');
+                } else {
+                    btn.classList.add('text-accent');
+                }
+            }, 1000);
+        }
+
+        function startFunnyTextRotation() {
+            let idx = 0;
+            const mainEl = document.getElementById('funnyTextMain');
+            const subEl = document.getElementById('funnyTextSub');
+            
+            setInterval(() => {
+                if(document.getElementById('fullChatOverlay').classList.contains('hidden') && document.getElementById('chatHistoryContainer').childElementCount > 2) return;
+                mainEl.style.opacity = '0';
+                subEl.style.opacity = '0';
+                setTimeout(() => {
+                    idx = (idx + 1) % funnyTexts.length;
+                    mainEl.innerText = funnyTexts[idx].main;
+                    subEl.innerText = funnyTexts[idx].sub;
+                    mainEl.style.opacity = '0.8';
+                    subEl.style.opacity = '0.6';
+                }, 500);
+            }, 4000);
+        }
 
         function checkFirstVisit() {
             if (!localStorage.getItem(KEYS.VISITED)) {
                 openAboutModal();
                 localStorage.setItem(KEYS.VISITED, 'true');
             }
-        }
-
-        function rotateTips() {
-            const container = document.getElementById('tipsContainer');
-            if(!state.settings.showHints) {
-                container.classList.add('hidden');
-                return;
-            }
-            container.classList.remove('hidden');
-            const el = document.getElementById('tipText');
-            el.style.opacity = '0';
-            setTimeout(() => {
-                el.innerText = tips[tipIndex];
-                el.style.opacity = '1';
-                tipIndex = (tipIndex + 1) % tips.length;
-            }, 300);
         }
 
         function loadData() {
@@ -726,22 +724,77 @@
             state.chatHistory = JSON.parse(localStorage.getItem(KEYS.CHAT)) || [];
             const s = JSON.parse(localStorage.getItem(KEYS.SET));
             if(s) state.settings = { ...state.settings, ...s };
-            
-            // Migration logic
-            if (s && typeof s.hideLogo !== 'undefined') {
-                state.settings.showLogo = !s.hideLogo;
-                state.settings.showTimer = !s.hideTimer;
-                state.settings.showHub = !s.hideHub;
-                state.settings.showAiWidget = !s.hideAiWidget;
-                delete state.settings.hideLogo; delete state.settings.hideTimer;
-                delete state.settings.hideHub; delete state.settings.hideAiWidget;
-            }
 
-            // Removed fallback to DEFAULT_API_KEY if empty, for security.
+            if (state.settings.defaultCategory && state.categories.find(c => c.id === state.settings.defaultCategory)) {
+                state.category = state.settings.defaultCategory;
+            } else {
+                state.category = 'all'; 
+            }
+            
             applyAllSettings();
+            restoreAiWidgetState(); 
             document.getElementById('notesArea').value = localStorage.getItem(KEYS.NOTES) || '';
             updateHubIndicator();
             renderUI();
+            
+            // Hints Logic
+            if(!state.settings.hintsShown) {
+                setTimeout(() => {
+                    document.getElementById('magicNotesHint').classList.remove('hidden');
+                    document.getElementById('magicTodoHint').classList.remove('hidden');
+                    setTimeout(() => {
+                         document.getElementById('magicNotesHint').classList.add('hidden');
+                         document.getElementById('magicTodoHint').classList.add('hidden');
+                         state.settings.hintsShown = true;
+                         saveData('settings');
+                    }, 8000);
+                }, 2000);
+            }
+        }
+        
+        function restoreAiWidgetState() {
+            if (state.chatHistory.length > 0) {
+                const lastMsg = [...state.chatHistory].reverse().find(m => m.role === 'model');
+                if (lastMsg) {
+                    const txtOutEl = document.getElementById('aiOutput');
+                    const imgEl = document.getElementById('generatedImage');
+                    const resContEl = document.getElementById('aiResultContainer');
+                    const hintEl = document.getElementById('aiRestoreHint');
+                    
+                    resContEl.classList.remove('hidden');
+                    hintEl.classList.remove('hidden'); 
+
+                    if (lastMsg.image) {
+                        imgEl.src = lastMsg.image;
+                        imgEl.classList.remove('hidden');
+                        if (lastMsg.text) {
+                            txtOutEl.innerHTML = DOMPurify.sanitize(marked.parse(lastMsg.text));
+                            txtOutEl.classList.remove('hidden');
+                        }
+                    } else if (lastMsg.text) {
+                        txtOutEl.innerHTML = DOMPurify.sanitize(marked.parse(lastMsg.text));
+                        decorateAiContent(txtOutEl);
+                        txtOutEl.classList.remove('hidden');
+                    }
+                }
+            }
+        }
+        
+        function toggleAiOutput() {
+            state.isAiOutputCollapsed = !state.isAiOutputCollapsed;
+            const wrapper = document.getElementById('aiContentWrapper');
+            const hint = document.getElementById('aiCollapsedHint');
+            const icon = document.getElementById('aiToggleIcon');
+            
+            if(state.isAiOutputCollapsed) {
+                wrapper.classList.add('hidden');
+                hint.classList.remove('hidden');
+                icon.className = 'fa-solid fa-chevron-down text-xs';
+            } else {
+                wrapper.classList.remove('hidden');
+                hint.classList.add('hidden');
+                icon.className = 'fa-solid fa-chevron-up text-xs';
+            }
         }
 
         function saveData(type) {
@@ -754,7 +807,7 @@
         }
 
         function resetSettings() {
-            if (window.confirm("Вы уверены? Это удалит все настройки и чат.")) {
+            if (window.confirm("Вы уверены? Это удалит все настройки и чат, Оставит ваши сайты.")) {
                 localStorage.removeItem(KEYS.SET);
                 localStorage.removeItem(KEYS.CHAT);
                 localStorage.removeItem(KEYS.VISITED);
@@ -782,50 +835,65 @@
                 floatBtn.style.bottom = '32px'; 
             }
             
-            // Logic: if SHOW is true, remove 'hidden'. If SHOW is false, add 'hidden'
             document.getElementById('logoContainer').classList.toggle('hidden', !s.showLogo);
             document.getElementById('timerBtn')?.classList.toggle('hidden', !s.showTimer);
             document.getElementById('hubBtn')?.classList.toggle('hidden', !s.showHub);
             document.getElementById('aiWidgetSection')?.classList.toggle('hidden', !s.showAiWidget);
 
-            // Sync Inputs
+            // LOGIC FOR HIDDEN HEADER BUTTONS
+            const header = document.getElementById('mainHeader');
+            const setBtn = document.getElementById('settingsBtn');
+            const backupSetBtn = document.getElementById('backupSettingsBtn');
+            const isAllTopHidden = !s.showLogo && !s.showTimer && !s.showHub;
+
+            if (isAllTopHidden) {
+                header.classList.add('hidden'); // Completely hide header structure
+                // Show the backup button in the resource bar
+                backupSetBtn.classList.remove('hidden');
+                
+                // Show toast if first time
+                if(!sessionStorage.getItem('settingsMovedShown')) {
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 4000);
+                    sessionStorage.setItem('settingsMovedShown', 'true');
+                }
+            } else {
+                header.classList.remove('hidden');
+                backupSetBtn.classList.add('hidden'); // Hide backup button
+            }
+
             document.getElementById('searchPosToggle').checked = s.searchPos === 'bottom';
             document.getElementById('themeToggle').checked = s.theme === 'dark';
-            // Only show user key if it exists
             document.getElementById('geminiKeyInput').value = s.apiKey || ''; 
             document.getElementById('accentColorInput').value = s.accent;
             document.getElementById('searchEngineInput').value = s.searchEngine;
             document.getElementById('blurRange').value = s.blur;
-            document.getElementById('dnsInput').value = s.dns || '';
+            document.getElementById('defaultCategoryInput').value = s.defaultCategory || 'all';
             
-            // Visibility Toggles (Checked = Visible)
             document.getElementById('showLogoToggle').checked = s.showLogo;
             document.getElementById('showTimerToggle').checked = s.showTimer;
             document.getElementById('showHubToggle').checked = s.showHub;
             document.getElementById('showAiWidgetToggle').checked = s.showAiWidget;
-            document.getElementById('showHintsToggle').checked = s.showHints;
 
             const iconMap = { google: 'google', yandex: 'yandex', bing: 'microsoft', ddg: 'chrome' };
             document.getElementById('searchIcon').className = `text-orbita-secondary text-xl mr-4 transition-colors fa-brands fa-${iconMap[s.searchEngine] || 'google'}`;
-            
-            rotateTips(); // Re-render tips visibility immediately
+
+            const svgData = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${encodeURIComponent(s.accent)}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='4' fill='${encodeURIComponent(s.accent)}'/><path d='M21 12a9 9 0 1 1-6.219-8.56'/></svg>`;
+            document.querySelector("link[rel*='icon']").href = "data:image/svg+xml," + svgData;
         }
 
         function saveSettings() {
             const keyInput = document.getElementById('geminiKeyInput').value.trim();
-            // Allow saving empty key to clear it
             state.settings.apiKey = keyInput;
 
             state.settings.searchPos = document.getElementById('searchPosToggle').checked ? 'bottom' : 'top';
             state.settings.searchEngine = document.getElementById('searchEngineInput').value;
-            state.settings.dns = document.getElementById('dnsInput').value;
+            state.settings.defaultCategory = document.getElementById('defaultCategoryInput').value;
             
-            // Logic: Checked = Visible (True)
             state.settings.showLogo = document.getElementById('showLogoToggle').checked;
             state.settings.showTimer = document.getElementById('showTimerToggle').checked;
             state.settings.showHub = document.getElementById('showHubToggle').checked;
             state.settings.showAiWidget = document.getElementById('showAiWidgetToggle').checked;
-            state.settings.showHints = document.getElementById('showHintsToggle').checked;
 
             saveData('settings'); applyAllSettings();
         }
@@ -849,12 +917,26 @@
         function clearBackground() { state.settings.bgImage = ''; saveData('settings'); applyAllSettings(); }
 
         // --- UI ---
+        function updateSettingsDropdowns() {
+            const defCatSelect = document.getElementById('defaultCategoryInput');
+            const currentVal = defCatSelect.value;
+            defCatSelect.innerHTML = state.categories.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+            if (state.categories.some(c => c.id === currentVal)) {
+                 defCatSelect.value = currentVal;
+            } else {
+                 defCatSelect.value = 'all';
+            }
+        }
+
         function renderUI() {
-            // Render Categories with Delete Button in Edit Mode
+            document.getElementById('resCategory').innerHTML = state.categories.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
+            updateSettingsDropdowns(); 
+
             document.getElementById('categoryFilters').innerHTML = state.categories.map(cat => {
                 const isAll = cat.id === 'all';
+                // Mobile Fix: Larger touch target for delete button
                 const deleteBtn = (state.editMode && !isAll) 
-                    ? `<button onclick="deleteCategory('${cat.id}', event)" class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center shadow-sm hover:scale-110 transition-transform z-10"><i class="fa-solid fa-times text-[9px]"></i></button>`
+                    ? `<button onclick="deleteCategory('${cat.id}', event)" class="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center shadow-md z-20 animate-fade-in active:scale-95"><i class="fa-solid fa-times text-[10px]"></i></button>`
                     : '';
                 
                 return `
@@ -866,8 +948,6 @@
                 </div>
             `}).join('');
 
-            document.getElementById('resCategory').innerHTML = state.categories.map(c => `<option value="${c.id}">${c.label}</option>`).join('');
-
             const grid = document.getElementById('resourceGrid');
             const empty = document.getElementById('emptyState');
             const filtered = state.category === 'all' ? state.resources : state.resources.filter(r => r.category === state.category);
@@ -875,6 +955,10 @@
             if(filtered.length === 0) { grid.classList.add('hidden'); empty.classList.remove('hidden'); }
             else {
                 grid.classList.remove('hidden'); empty.classList.add('hidden');
+                // Mobile Fix: Adjusted drag attribute to be false on touch devices if needed, but primarily relying on button click
+                const isMobile = window.matchMedia("(max-width: 768px)").matches;
+                const draggableAttr = state.editMode && !isMobile ? 'true' : 'false';
+
                 grid.innerHTML = filtered.map(res => {
                     const isUrlIcon = res.icon && res.icon.startsWith('http');
                     const iconHtml = isUrlIcon 
@@ -882,17 +966,17 @@
                         : `<i class="${res.icon || 'fa-solid fa-globe'} text-xl"></i>`;
                         
                     return `
-                    <div class="relative group resource-card" draggable="${state.editMode}" data-id="${res.id}">
-                        <a href="${res.url}" target="_blank" class="block h-full cozy-card p-4 hover:border-accent transition-all flex flex-col items-center text-center gap-3 active:scale-95 cursor-pointer">
-                            <div class="w-12 h-12 rounded-xl bg-orbita-bg flex items-center justify-center text-orbita-text group-hover:text-accent transition-all overflow-hidden p-0">
+                    <div class="relative group resource-card" draggable="${draggableAttr}" data-id="${res.id}">
+                        <a href="${res.url}" target="_blank" class="block h-full cozy-card p-2 sm:p-4 hover:border-accent transition-all flex flex-col items-center text-center gap-1.5 sm:gap-3 active:scale-95 cursor-pointer">
+                            <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-orbita-text group-hover:text-accent transition-all overflow-hidden p-0 text-sm sm:text-base">
                                 ${iconHtml}
                             </div>
-                            <div><h3 class="font-bold text-xs text-orbita-text line-clamp-1">${res.title}</h3></div>
+                            <div class="w-full"><h3 class="font-bold text-[10px] sm:text-xs text-orbita-text line-clamp-2 leading-tight">${res.title}</h3></div>
                         </a>
-                        ${state.editMode ? `<button onclick="deleteResource(${res.id})" class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-red-500 text-white z-20 shadow-sm flex items-center justify-center"><i class="fa-solid fa-times text-[10px]"></i></button>` : ''}
+                        ${state.editMode ? `<button onclick="deleteResource(${res.id}, event)" class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-red-500 text-white z-20 shadow-md flex items-center justify-center animate-fade-in active:scale-90 touch-manipulation"><i class="fa-solid fa-times text-xs"></i></button>` : ''}
                     </div>
                 `}).join('');
-                if(state.editMode) setupDragAndDrop();
+                if(state.editMode && !isMobile) setupDragAndDrop();
             }
 
             document.getElementById('todoList').innerHTML = state.todos.map(t => `
@@ -906,7 +990,91 @@
             `).join('');
         }
 
-        // --- AI LOGIC (FIXED) ---
+        // --- CORE AI LOGIC ---
+        async function callGeminiAPI(prompt, systemInstruction = "", imageBase64 = null, imageMime = null) {
+             const apiKeyToUse = state.settings.apiKey;
+             if (!apiKeyToUse) throw new Error("API Key не найден.");
+
+             let parts = [{ text: prompt }];
+             if (imageBase64) {
+                 parts.push({ inlineData: { mimeType: imageMime, data: imageBase64 } });
+             }
+
+             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKeyToUse}`, {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({ contents: [{ parts: parts }], systemInstruction: { parts: [{ text: systemInstruction }] } })
+            });
+            
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.error?.message || res.statusText);
+            }
+            
+            const d = await res.json();
+            const text = d.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) throw new Error('Пустой ответ от AI');
+            return text;
+        }
+
+        // --- MAGIC TOOLS ---
+        async function handleMagicTodo() {
+            const input = document.getElementById('todoInput');
+            const task = input.value.trim();
+            const btn = document.getElementById('magicTodoBtn');
+            const icon = btn.querySelector('i');
+
+            if (!task) return alert("Введите задачу для разбивки!");
+            
+            icon.classList.remove('fa-wand-magic-sparkles');
+            icon.classList.add('fa-spinner', 'fa-spin');
+            
+            try {
+                const prompt = `Break down this task into 3-5 actionable subtasks. Return ONLY a raw JSON array of strings (no markdown). Task: ${task}`;
+                const raw = await callGeminiAPI(prompt, "You are a productivity expert.");
+                const jsonStr = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+                const subtasks = JSON.parse(jsonStr);
+                
+                if (Array.isArray(subtasks)) {
+                    subtasks.forEach(t => {
+                        state.todos.unshift({id:Date.now() + Math.random(), text: t, done: false});
+                    });
+                    saveData('todos');
+                    renderUI();
+                    input.value = ''; 
+                }
+            } catch (e) {
+                alert("Ошибка AI: " + e.message);
+            } finally {
+                icon.classList.remove('fa-spinner', 'fa-spin');
+                icon.classList.add('fa-wand-magic-sparkles');
+            }
+        }
+
+        async function handleMagicNotes() {
+            const area = document.getElementById('notesArea');
+            const text = area.value.trim();
+            const btn = document.getElementById('magicNotesBtn');
+            const icon = btn.querySelector('i');
+
+            if (!text) return alert("Напишите что-нибудь в заметках!");
+
+            icon.classList.remove('fa-wand-magic-sparkles');
+            icon.classList.add('fa-spinner', 'fa-spin');
+
+            try {
+                const prompt = `Fix grammar, improve style, and make it slightly more professional. Keep the language same as input (Russian). Return ONLY the rewritten text. Input: ${text}`;
+                const improvedText = await callGeminiAPI(prompt, "You are a professional editor.");
+                area.value = improvedText;
+                saveData('notes');
+            } catch (e) {
+                alert("Ошибка AI: " + e.message);
+            } finally {
+                icon.classList.remove('fa-spinner', 'fa-spin');
+                icon.classList.add('fa-wand-magic-sparkles');
+            }
+        }
+
+        // --- AI LOGIC (Chat) ---
         function setAttachment(file, fromFullChat = false) {
             if (!file) return;
             state.currentFileName = file.name;
@@ -976,12 +1144,6 @@
                 wrapper.className = 'table-wrapper relative group';
                 table.parentNode.insertBefore(wrapper, table);
                 wrapper.appendChild(table);
-
-                const btn = document.createElement('button');
-                btn.className = 'absolute top-2 right-2 bg-orbita-surface border border-orbita-border shadow-sm px-2 py-1 rounded-lg text-xs font-medium text-orbita-secondary hover:text-accent opacity-0 group-hover:opacity-100 transition-opacity';
-                btn.innerHTML = '<i class="fa-solid fa-file-csv mr-1"></i>Excel';
-                btn.onclick = () => downloadTableAsCSV(table);
-                wrapper.appendChild(btn);
             });
         }
 
@@ -1001,22 +1163,8 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url; a.download = `code_${Date.now()}.${ext}`;
-            a.click(); URL.revokeObjectURL(url);
-        };
-
-        window.downloadTableAsCSV = (table) => {
-            let csv = [];
-            const rows = table.querySelectorAll("tr");
-            for (let i = 0; i < rows.length; i++) {
-                const row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText.replace(/"/g, '""') + '"');
-                csv.push(row.join(","));
-            }
-            const blob = new Blob(["\ufeff" + csv.join("\n")], { type: "text/csv;charset=utf-8;" }); 
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `table_${Date.now()}.csv`;
-            a.click(); URL.revokeObjectURL(url);
+            a.click(); 
+            setTimeout(() => URL.revokeObjectURL(url), 100);
         };
 
         window.downloadNotes = () => {
@@ -1026,7 +1174,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url; a.download = `notes_${Date.now()}.txt`;
-            a.click(); URL.revokeObjectURL(url);
+            a.click(); setTimeout(() => URL.revokeObjectURL(url), 100);
         }
 
         async function handleAiSubmit(isFullChat = false) {
@@ -1035,6 +1183,7 @@
             const txtOutEl = document.getElementById('aiOutput');
             const imgEl = document.getElementById('generatedImage');
             const resContEl = document.getElementById('aiResultContainer');
+            const hintEl = document.getElementById('aiRestoreHint');
 
             const promptText = inputEl.value;
             const currentImg = state.currentImageBase64;
@@ -1042,11 +1191,23 @@
 
             if(!promptText && !currentImg) return;
             
-            // Validate API Key
+            // FIX: Graceful handling of empty API Key
             const apiKeyToUse = state.settings.apiKey;
             if (!apiKeyToUse) {
-                const errorMsg = "Пожалуйста, укажите API Key в настройках.";
-                alert(errorMsg); // Simple alert for missing key
+                const noKeyMsg = "⚠️ <b>API Ключ не найден.</b><br>Пожалуйста, перейдите в настройки (шестеренка) и вставьте ваш Gemini API Key. Это бесплатно.";
+                
+                if (isFullChat) {
+                    state.chatHistory.push({ role: 'user', text: promptText, image: null });
+                    state.chatHistory.push({ role: 'model', text: noKeyMsg, image: null });
+                    inputEl.value = '';
+                    renderChatHistory();
+                } else {
+                    resContEl.classList.remove('hidden');
+                    hintEl.classList.add('hidden'); // New response, hide hint
+                    txtOutEl.innerHTML = noKeyMsg;
+                    txtOutEl.classList.remove('hidden');
+                    if(state.isAiOutputCollapsed) toggleAiOutput(); // Open if closed
+                }
                 return;
             }
             
@@ -1055,7 +1216,13 @@
             clearFile(); inputEl.value = '';
             
             if (isFullChat) { renderChatHistory(); } 
-            else { resContEl.classList.remove('hidden'); txtOutEl.classList.add('hidden'); imgEl.classList.add('hidden'); }
+            else { 
+                resContEl.classList.remove('hidden'); 
+                hintEl.classList.add('hidden'); // New response, hide hint
+                txtOutEl.classList.add('hidden'); 
+                imgEl.classList.add('hidden'); 
+                if(state.isAiOutputCollapsed) toggleAiOutput(); // Open if closed
+            }
             loaderEl.classList.remove('hidden');
 
             try {
@@ -1080,37 +1247,10 @@
                          }
                     } else { throw new Error('Не удалось создать фото. Проверьте API ключ.'); }
                 } else {
-                    let parts = [{ text: promptText }];
-                    if (currentImg) {
-                        parts.push({ 
-                            inlineData: { 
-                                mimeType: currentMime, 
-                                data: currentImg 
-                            } 
-                        });
-                    }
-
                     const systemPrompt = isFullChat ? "You are a helpful AI. Answer in Russian." : "You are a concise AI. Answer in Russian under 50 words.";
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKeyToUse}`, {
-                        method:'POST', headers:{'Content-Type':'application/json'},
-                        body:JSON.stringify({ contents: [{ parts: parts }], systemInstruction: { parts: [{ text: systemPrompt }] } })
-                    });
-                    
-                    if (!res.ok) {
-                        const errorData = await res.json().catch(() => ({}));
-                        throw new Error(errorData.error?.message || res.statusText);
-                    }
-                    
-                    const d = await res.json();
-                    replyText = d.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (!replyText) {
-                         console.error(d);
-                         throw new Error(d.error?.message || 'Пустой ответ API.');
-                    }
+                    replyText = await callGeminiAPI(promptText, systemPrompt, currentImg, currentMime);
 
                     if(!isFullChat) {
-                        // Added DOMPurify for security
                         const cleanHtml = DOMPurify.sanitize(marked.parse(replyText));
                         txtOutEl.innerHTML = cleanHtml; 
                         decorateAiContent(txtOutEl); 
@@ -1121,7 +1261,6 @@
                 state.chatHistory.push({ role: 'model', text: replyText, image: generatedImageBase64 ? `data:image/png;base64,${generatedImageBase64}` : null });
                 saveData('chat');
             } catch(e) {
-                // INTELLIGENT ERROR TRANSLATION
                 let errorMsg = e.message || "Неизвестная ошибка";
                 let friendlyMsg = "";
 
@@ -1130,9 +1269,11 @@
                 } else if (errorMsg.includes('quota') || errorMsg.includes('429')) {
                     friendlyMsg = "⏳ <b>Лимит исчерпан:</b> Слишком много запросов. Подождите минуту.";
                 } else if (errorMsg.includes('fetch') || errorMsg.includes('Failed to fetch')) {
-                    friendlyMsg = "🌐 <b>Ошибка сети:</b> Нет соединения. Если вы в РФ, <b>включите VPN</b>.";
+                    friendlyMsg = "🌐 <b>Ошибка сети:</b> Нет соединения. Если вы в РФ, <b>используйте DNS Comss (см. О системе)</b>.";
                 } else if (errorMsg.includes('permission denied') || errorMsg.includes('403')) {
-                    friendlyMsg = "⛔ <b>Доступ запрещен:</b> Возможно, сервис недоступен в вашем регионе (нужен VPN).";
+                    friendlyMsg = "⛔ <b>Доступ запрещен:</b> Возможно, сервис недоступен в вашем регионе (используйте DNS или VPN).";
+                } else if (errorMsg.includes('User location is not supported') || errorMsg.includes('User location is not supported for API use.')) {
+                    friendlyMsg = "❌ <b>Доступ запрещен:</b> Возможно, сервис недоступен в вашем регионе (используйте DNS или VPN).";
                 } else {
                     friendlyMsg = `❌ <b>Ошибка:</b> ${errorMsg}`;
                 }
@@ -1155,11 +1296,9 @@
         function renderChatHistory() {
             const msgContainer = document.getElementById('chatMessages');
             const emptyState = document.getElementById('chatEmptyState');
-            const loader = document.getElementById('fullChatLoader');
             
             msgContainer.innerHTML = '';
             
-            // Logic: If NO messages, show Empty State. If messages exist, hide it.
             if (state.chatHistory.length === 0) {
                 emptyState.classList.remove('hidden');
             } else {
@@ -1184,7 +1323,6 @@
                     msgContainer.appendChild(tempDiv.firstElementChild);
                 });
             }
-            // Auto scroll
             const container = document.getElementById('chatHistoryContainer');
             container.scrollTop = container.scrollHeight;
         }
@@ -1197,10 +1335,12 @@
         }
 
         function clearChatHistory() { 
-            if(confirm('Удалить чат?')) { 
+            if(confirm('Удалить историю чата?')) { 
                 state.chatHistory=[]; 
                 saveData('chat'); 
-                renderChatHistory(); // This now correctly shows the empty state because we don't wipe the parent
+                renderChatHistory(); 
+                document.getElementById('aiOutput').innerHTML = ''; 
+                document.getElementById('aiResultContainer').classList.add('hidden');
             } 
         }
 
@@ -1209,6 +1349,7 @@
         function formatTime(s) { return new Date(s * 1000).toISOString().substr(11, 8).replace(/^00:/, ''); }
         function updateTimerDisplay(s) {
              document.getElementById('timerDisplay').innerText = formatTime(s);
+             document.getElementById('smartClockText').innerText = formatTime(s);
              const pct = state.timer.initial > 0 ? s/state.timer.initial : 0;
              document.getElementById('timerProgress').style.strokeDashoffset = 289 - (pct*289);
         }
@@ -1243,10 +1384,9 @@
 
         function promptNewCategory() { const n = prompt("Имя категории:"); if(n) { state.categories.push({id: 'cat_'+Date.now(), label: n}); saveData('cats'); renderUI(); } }
         
-        // Delete Category Function
         window.deleteCategory = (id, event) => {
-            event.stopPropagation(); // Prevent triggering category selection
-            if(confirm('Удалить эту категорию? Ресурсы останутся, но будут без категории.')) {
+            if(event) { event.stopPropagation(); event.preventDefault(); }
+            if(confirm('Удалить эту категорию? Ресурсы останутся.')) {
                 state.categories = state.categories.filter(c => c.id !== id);
                 if(state.category === id) state.category = 'all';
                 saveData('cats');
@@ -1307,7 +1447,15 @@
 
         function toggleEditMode() { state.editMode = !state.editMode; document.getElementById('editModeBtn').classList.toggle('text-accent', state.editMode); renderUI(); }
         function setCategory(id) { state.category = id; if(id !== 'all' && state.editMode) toggleEditMode(); renderUI(); }
-        window.deleteResource = (id) => { if(confirm('Удалить?')) { state.resources = state.resources.filter(r=>r.id!==id); saveData('res'); renderUI(); } };
+        window.deleteResource = (id, event) => { 
+            // FIX: Stop propagation to prevent navigation
+            if(event) { event.preventDefault(); event.stopPropagation(); }
+            if(confirm('Удалить?')) { 
+                state.resources = state.resources.filter(r=>r.id!==id); 
+                saveData('res'); 
+                renderUI(); 
+            } 
+        };
         window.autoFillTitle = () => { const val = document.getElementById('resUrl').value; if(val && !document.getElementById('resTitle').value) { try { document.getElementById('resTitle').value = new URL(val).hostname.replace('www.','').split('.')[0]; } catch(e){} } };
 
         window.openModal = () => document.getElementById('addModal').classList.remove('hidden');
